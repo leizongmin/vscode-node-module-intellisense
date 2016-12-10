@@ -5,8 +5,7 @@
 
 Visual Studio Code plugin that autocompletes JavaScript / TypeScript modules in import statements.
 
-This plugin was inspired by [Npm Intellisense](https://github.com/ChristianKohler/NpmIntellisense) and
-[AutoFileName](https://github.com/s6323859/vscode-autofilename).
+This plugin was inspired by [Npm Intellisense](https://github.com/ChristianKohler/NpmIntellisense) and [AutoFileName](https://github.com/s6323859/vscode-autofilename).
 
 ![auto complete](https://github.com/leizongmin/vscode-node-module-intellisense/raw/master/images/auto_complete.gif)
 
