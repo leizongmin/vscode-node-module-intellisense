@@ -1,4 +1,9 @@
+[![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/leizongmin.node-module-intellisense.svg)](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
+[![Installs](http://vsmarketplacebadge.apphb.com/installs/leizongmin.node-module-intellisense.svg)](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
+[![Rating](http://vsmarketplacebadge.apphb.com/rating/leizongmin.node-module-intellisense.svg)](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/travis/leizongmin/vscode-node-module-intellisense.svg)](https://travis-ci.org/leizongmin/vscode-node-module-intellisense)
+[![David](https://img.shields.io/david/leizongmin/vscode-node-module-intellisense.svg?style=flat-square)](https://david-dm.org/leizongmin/vscode-node-module-intellisense)
 [![David](https://img.shields.io/david/dev/leizongmin/vscode-node-module-intellisense.svg?style=flat-square)](https://david-dm.org/leizongmin/vscode-node-module-intellisense?type=dev)
 
 # Node.js Modules Intellisense
