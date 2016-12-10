@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as vscode from "vscode";
-import IntellisenseProvider from "./intellisense";
+import IntellisenseProvider from "./provider";
 
 export function activate(context: vscode.ExtensionContext) {
 
