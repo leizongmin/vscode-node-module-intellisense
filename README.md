@@ -34,11 +34,21 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
   // Scans file modules as well
   "node-module-intellisense.scanFileModules": true,
+
+  // File module extension names
+  "node-module-intellisense.fileModuleExtensionNames": [
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".vue"
+  ],
 }
 ```
 
 ## History
 
+* v1.0.2 - Support custom file module extension name, add ".vue" to default
 * v1.0.1 - Fix .vscodeignore
 * v1.0.0 - Initial release
 

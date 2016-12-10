@@ -20,6 +20,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
+  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".tsx", ".vue" ];
 
   private context: ExtensionContext;
 
@@ -29,12 +30,12 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
   private readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
   private languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact" ];
-  private fileModuleExtnames: string[] = [ ".js", ".jsx", ".ts", ".tsx" ];
 
   private config: WorkspaceConfiguration;
   private enableDevDependencies: boolean = true;
   private enableFileModules: boolean = true;
   private enableBuiltinModules: boolean = true;
+  private fileModuleExtensionNames: string[] = IntellisenseProvider.defaultFileModuleExtensionNames;
 
   private readonly disposables: Disposable[] = [];
 
@@ -48,6 +49,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       this.enableBuiltinModules = this.config.get("scanBuiltinModules", true);
       this.enableDevDependencies = this.config.get("scanDevDependencies", true);
       this.enableFileModules = this.config.get("scanFileModules", true);
+      this.fileModuleExtensionNames = this.config.get("fileModuleExtensionNames", IntellisenseProvider.defaultFileModuleExtensionNames);
     };
     vscode.workspace.onDidChangeConfiguration(e => {
       loadConfig();
@@ -221,7 +223,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       } else if (stats.isFile()) {
         // file
         const ext = path.extname(name);
-        if (this.fileModuleExtnames.indexOf(ext) !== -1) {
+        if (this.fileModuleExtensionNames.indexOf(ext) !== -1) {
           const n = name.slice(0, name.length - ext.length);
           if (!fileMap.has(n)) {
             fileMap.set(n, true);
