@@ -20,7 +20,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
-  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".tsx", ".vue" ];
+  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".tsx", ".vue", ".json" ];
 
   private context: ExtensionContext;
 
