@@ -4,7 +4,6 @@
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/travis/leizongmin/vscode-node-module-intellisense.svg)](https://travis-ci.org/leizongmin/vscode-node-module-intellisense)
 [![David](https://img.shields.io/david/leizongmin/vscode-node-module-intellisense.svg?style=flat-square)](https://david-dm.org/leizongmin/vscode-node-module-intellisense)
-[![David](https://img.shields.io/david/dev/leizongmin/vscode-node-module-intellisense.svg?style=flat-square)](https://david-dm.org/leizongmin/vscode-node-module-intellisense?type=dev)
 
 # Node.js Modules Intellisense
 
