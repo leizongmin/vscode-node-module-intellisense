@@ -10,9 +10,7 @@ This plugin was inspired from [Npm Intellisense](https://github.com/ChristianKoh
 
 ## Installation
 
-In the command palette (cmd-shift-p) select Install Extension and choose npm Intellisense.
-
-![install](https://github.com/leizongmin/vscode-node-module-intellisense/raw/master/images/npm_install.gif)
+In the command palette (Cmd-Shift-P) select Install Extension and choose **Node.js Module Intellisense**.
 
 
 ## Contributing
@@ -24,7 +22,7 @@ If the is any bug, create a pull request or an issue please.
 ## Settings
 
 Node.js Module Intellisense scans builtin modules, dependencies, devDependencies and file modules by default.
-Set `scanBuiltinModules`, `scanDevDependencies` and `scanFileModules` to false to disable it.
+Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disable it.
 
 ```javascript
 {
@@ -41,7 +39,7 @@ Set `scanBuiltinModules`, `scanDevDependencies` and `scanFileModules` to false t
 
 ## History
 
-* v0.1.0 - Initial release
+* v1.0.0 - Initial release
 
 ## License
 
