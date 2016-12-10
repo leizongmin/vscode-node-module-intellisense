@@ -62,10 +62,14 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
 ## Changelog
 
-* v1.0.4 - Support language "HTML"
-* v1.0.2 - Support custom file module extension name, add ".vue" and ".json" to default
-* v1.0.1 - Fix .vscodeignore
-* v1.0.0 - Initial release
++ v1.1.0 - Fix some problem:
+  + Support `export ... from ...` statement (issue #1)
+  + Add support for TypeScript `/// <reference...` comment (issue #2)
+  + Fix TypeScript `.d.ts` file problem (issue #3)
++ v1.0.4 - Support language `HTML`
++ v1.0.2 - Support custom file module extension name, add `.vue` and `.json` to default
++ v1.0.1 - Fix `.vscodeignore`
++ v1.0.0 - Initial release
 
 ## License
 
