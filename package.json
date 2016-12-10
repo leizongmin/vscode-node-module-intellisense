@@ -2,7 +2,7 @@
   "name": "node-module-intellisense",
   "displayName": "Node.js Modules Intellisense",
   "description": "Visual Studio Code plugin that autocompletes Node.js modules in import statements",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "publisher": "leizongmin",
   "repository": {
     "type": "git",
