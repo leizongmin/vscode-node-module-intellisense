@@ -21,15 +21,14 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
   public static readonly configPath: string = "node-module-intellisense";
   public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".tsx", ".vue", ".json" ];
+  public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
+  public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
   private context: ExtensionContext;
 
   private dependencies: string[] = [];
   private packageJsonFile: string = path.resolve(vscode.workspace.rootPath, "package.json");
   private packageJsonWatcher: FileSystemWatcher;
-
-  private readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
-  private languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact" ];
 
   private config: WorkspaceConfiguration;
   private enableDevDependencies: boolean = true;
@@ -59,7 +58,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // this.debug("load config", this.config);
 
     // create completion provider
-    vscode.languages.registerCompletionItemProvider(this.languageSelector, this, ...this.triggerCharacters);
+    vscode.languages.registerCompletionItemProvider(IntellisenseProvider.languageSelector, this, ...IntellisenseProvider.triggerCharacters);
     // this.debug("activate");
     // this.debug("builtinModules", IntellisenseProvider.builtinModules);
 

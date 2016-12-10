@@ -49,6 +49,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
 ## History
 
+* v1.0.4 - Support language "HTML"
 * v1.0.2 - Support custom file module extension name, add ".vue" and ".json" to default
 * v1.0.1 - Fix .vscodeignore
 * v1.0.0 - Initial release
