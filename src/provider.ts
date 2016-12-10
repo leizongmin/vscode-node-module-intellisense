@@ -20,7 +20,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
-  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".tsx", ".vue", ".json" ];
+  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ];
   public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
   public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
@@ -49,6 +49,8 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       this.enableDevDependencies = this.config.get("scanDevDependencies", true);
       this.enableFileModules = this.config.get("scanFileModules", true);
       this.fileModuleExtensionNames = this.config.get("fileModuleExtensionNames", IntellisenseProvider.defaultFileModuleExtensionNames);
+      this.fileModuleExtensionNames.sort((a, b) => b.length - a.length);
+      // this.debug(this.fileModuleExtensionNames);
     };
     vscode.workspace.onDidChangeConfiguration(e => {
       loadConfig();
@@ -222,8 +224,8 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         }));
       } else if (stats.isFile()) {
         // file
-        const ext = path.extname(name);
-        if (this.fileModuleExtensionNames.indexOf(ext) !== -1) {
+        const [ ok, ext ] = parseFileExtensionName(name, this.fileModuleExtensionNames);
+        if (ok) {
           const n = isIncludeExtname ? name : name.slice(0, name.length - ext.length);
           if (!fileMap.has(n)) {
             fileMap.set(n, true);
@@ -333,8 +335,8 @@ function readdir(dir: string): Promise<string[]> {
 
 interface IntellisenseLineInfo {
   line?: string;
-  quote?: string;
-  quoteStart?: number;
+  quotation?: string;
+  quotationStart?: number;
   search?: string;
   absoultePath?: boolean;
   relativePath?: boolean;
@@ -345,6 +347,9 @@ interface IntellisenseLineInfo {
 
 type StatementType = "require" | "import" | "export" | "reference" | false;
 
+/**
+ * Parse current line
+ */
 function parseLine(document: TextDocument, position: Position): IntellisenseLineInfo {
   const info: IntellisenseLineInfo = {
     position,
@@ -356,9 +361,9 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
     return;
   }
 
-  const [ i, quote ] = getQuoteChar(line, position.character);
-  info.quote = quote;
-  info.quoteStart = i;
+  const [ i, quotation ] = getForwardQuotation(line, position.character);
+  info.quotation = quotation;
+  info.quotationStart = i;
   info.search = line.slice(i + 1, position.character);
 
   if (info.search[0] === ".") {
@@ -371,6 +376,9 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
   return info;
 }
 
+/**
+ * Returns statement type
+ */
 function getStatementType(line: string): StatementType {
   line = line.trim();
   if (line.indexOf("import ") === 0) {
@@ -388,11 +396,27 @@ function getStatementType(line: string): StatementType {
   return false;
 }
 
-function getQuoteChar(line: string, index: number): [ number, string ] {
+/**
+ * Returns forward quotation position and character
+ */
+function getForwardQuotation(line: string, index: number): [ number, string ] {
   const i = line.lastIndexOf("\"", index - 1);
   const j = line.lastIndexOf("'", index - 1);
   if (i > j) {
     return [ i, "\"" ];
   }
   return [ j, "'" ];
+}
+
+/**
+ * Parse File extension name
+ */
+function parseFileExtensionName(filename: string, supportExtensions: string[]): [ boolean, string ] {
+  const len = filename.length;
+  for (const ext of supportExtensions) {
+    if (filename.slice(len - ext.length) === ext) {
+      return [ true, ext ];
+    }
+  }
+  return [ false, "" ];
 }

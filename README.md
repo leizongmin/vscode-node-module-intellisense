@@ -52,6 +52,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
     ".js",
     ".jsx",
     ".ts",
+    ".d.ts",
     ".tsx",
     ".vue",
     ".json"

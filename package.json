@@ -51,7 +51,7 @@
         },
         "node-module-intellisense.fileModuleExtensionNames": {
           "type": "array",
-          "default": [ ".js", ".jsx", ".ts", ".tsx", ".vue", ".json" ],
+          "default": [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ],
           "description": "File module extension names"
         }
       }
