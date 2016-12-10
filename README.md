@@ -39,6 +39,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
 ## History
 
+* v1.0.1 - Fix .vscodeignore
 * v1.0.0 - Initial release
 
 ## License
