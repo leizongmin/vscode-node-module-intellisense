@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "no-empty": false,
+    "max-line-length": [
+      false
+    ],
+    "interface-name": [
+      false
+    ]
+  }
+}
