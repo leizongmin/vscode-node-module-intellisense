@@ -107,8 +107,8 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // this.debug("provideCompletionItems: parseLine", position, info);
 
     let list: CompletionItem[] = [];
-    const isShowPackage = info.packagePath || info.input === "";
-    const isShowFile = info.absoultePath || info.relativePath || info.input === "";
+    const isShowPackage = info.packagePath || info.search === "";
+    const isShowFile = info.absoultePath || info.relativePath || info.search === "";
 
     // builtin modules
     if (isShowPackage && this.enableBuiltinModules) {
@@ -126,15 +126,15 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
     // packages from relative path
     if (isShowFile && this.enableFileModules) {
-      const currentDir = path.resolve(path.dirname(document.uri.fsPath), info.input);
-      const files = await this.readCurrentDirectory(currentDir, info.input || "./");
+      const currentDir = path.resolve(path.dirname(document.uri.fsPath), info.search);
+      const files = await this.readCurrentDirectory(currentDir, info.search || "./");
       list = list.concat(files);
     }
 
     // fix insertText
     list.forEach(item => {
       if (!info.packagePath) {
-        item.insertText = item.label.slice(info.input.length);
+        item.insertText = item.label.slice(info.search.length);
       }
     });
 
@@ -334,7 +334,7 @@ interface IntellisenseLineInfo {
   line?: string;
   quote?: string;
   quoteStart?: number;
-  input?: string;
+  search?: string;
   absoultePath?: boolean;
   relativePath?: boolean;
   packagePath?: boolean;
@@ -346,16 +346,16 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
     position,
   };
   const line = document.getText(document.lineAt(position).range);
-  if (!isImportOrRequireStatement(line, position.character)) {
+  if (!isImportExportStatement(line, position.character)) {
     return;
   }
   const [ i, quote ] = getQuoteChar(line, position.character);
   info.quote = quote;
   info.quoteStart = i;
-  info.input = line.slice(i + 1, position.character);
-  if (info.input[0] === ".") {
+  info.search = line.slice(i + 1, position.character);
+  if (info.search[0] === ".") {
     info.relativePath = true;
-  } else if (info.input[0] === "/") {
+  } else if (info.search[0] === "/") {
     info.absoultePath = true;
   } else {
     info.packagePath = true;
@@ -363,14 +363,15 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
   return info;
 }
 
-function isImportOrRequireStatement(line: string, index: number): boolean {
+function isImportExportStatement(line: string, index: number): boolean {
   line = line.trim();
-  const i = line.indexOf("import");
-  if (i === 0) {
+  if (line.indexOf("import ") === 0) {
     return true;
   }
-  const j = line.indexOf("require");
-  if (j !== -1) {
+  if (line.indexOf("require(") !== -1) {
+    return true;
+  }
+  if (line.indexOf("export ") === 0 && line.indexOf(" from ") !== -1) {
     return true;
   }
   return false;
