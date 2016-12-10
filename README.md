@@ -1,8 +1,11 @@
-# Node.js Module Intellisense
+[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![David](https://img.shields.io/david/dev/leizongmin/vscode-node-module-intellisense.svg?style=flat-square)](https://david-dm.org/leizongmin/vscode-node-module-intellisense?type=dev)
 
-Visual Studio Code plugin that autocompletes Node.js modules in import statements.
+# Node.js Modules Intellisense
 
-This plugin was inspired from [Npm Intellisense](https://github.com/ChristianKohler/NpmIntellisense) and
+Visual Studio Code plugin that autocompletes JavaScript / TypeScript modules in import statements.
+
+This plugin was inspired by [Npm Intellisense](https://github.com/ChristianKohler/NpmIntellisense) and
 [AutoFileName](https://github.com/s6323859/vscode-autofilename).
 
 ![auto complete](https://github.com/leizongmin/vscode-node-module-intellisense/raw/master/images/auto_complete.gif)
@@ -10,7 +13,13 @@ This plugin was inspired from [Npm Intellisense](https://github.com/ChristianKoh
 
 ## Installation
 
-In the command palette (Cmd-Shift-P) select Install Extension and choose **Node.js Module Intellisense**.
+Launch VS Code Quick Open (⌘+P), paste the following command, and press enter.
+
+```
+ext install node-module-intellisense
+```
+
+View detail on [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
 
 
 ## Contributing
