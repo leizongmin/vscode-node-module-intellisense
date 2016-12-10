@@ -26,13 +26,13 @@ ext install node-module-intellisense
 View detail on [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
 
 
-## Contributing
+## Issues & Contribution
 
-If the is any bug, create a pull request or an issue please.
+If there is any bug, create a pull request or an issue please.
 [Github](https://github.com/leizongmin/vscode-node-module-intellisense)
 
 
-## Settings
+## Configuration
 
 Node.js Module Intellisense scans builtin modules, dependencies, devDependencies and file modules by default.
 Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disable it.
@@ -60,7 +60,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 }
 ```
 
-## History
+## Changelog
 
 * v1.0.4 - Support language "HTML"
 * v1.0.2 - Support custom file module extension name, add ".vue" and ".json" to default
