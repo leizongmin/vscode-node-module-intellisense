@@ -109,6 +109,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     let list: CompletionItem[] = [];
     const isShowPackage = info.packagePath || info.search === "";
     const isShowFile = info.absoultePath || info.relativePath || info.search === "";
+    const isIncludeExtname = info.type === "reference";
 
     // builtin modules
     if (isShowPackage && this.enableBuiltinModules) {
@@ -127,7 +128,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // packages from relative path
     if (isShowFile && this.enableFileModules) {
       const currentDir = path.resolve(path.dirname(document.uri.fsPath), info.search);
-      const files = await this.readCurrentDirectory(currentDir, info.search || "./");
+      const files = await this.readCurrentDirectory(currentDir, info.search || "./", isIncludeExtname);
       list = list.concat(files);
     }
 
@@ -200,7 +201,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // this.debug("load dependencies from package.json:", this.dependencies);
   }
 
-  private async readCurrentDirectory(dir: string, prefix: string): Promise<CompletionItem[]> {
+  private async readCurrentDirectory(dir: string, prefix: string, isIncludeExtname: boolean): Promise<CompletionItem[]> {
     const names = await readdir(dir);
     const list: CompletionItem[] = [];
     const fileMap = new Map<string, boolean>();
@@ -223,7 +224,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         // file
         const ext = path.extname(name);
         if (this.fileModuleExtensionNames.indexOf(ext) !== -1) {
-          const n = name.slice(0, name.length - ext.length);
+          const n = isIncludeExtname ? name : name.slice(0, name.length - ext.length);
           if (!fileMap.has(n)) {
             fileMap.set(n, true);
             list.push(createCompletionItem(`${ prefix }${ n }`, CompletionItemKind.File, {
@@ -339,20 +340,27 @@ interface IntellisenseLineInfo {
   relativePath?: boolean;
   packagePath?: boolean;
   position?: Position;
+  type?: StatementType;
 }
+
+type StatementType = "require" | "import" | "export" | "reference" | false;
 
 function parseLine(document: TextDocument, position: Position): IntellisenseLineInfo {
   const info: IntellisenseLineInfo = {
     position,
   };
+
   const line = document.getText(document.lineAt(position).range);
-  if (!isImportExportStatement(line, position.character)) {
+  info.type = getStatementType(line);
+  if (!info.type) {
     return;
   }
+
   const [ i, quote ] = getQuoteChar(line, position.character);
   info.quote = quote;
   info.quoteStart = i;
   info.search = line.slice(i + 1, position.character);
+
   if (info.search[0] === ".") {
     info.relativePath = true;
   } else if (info.search[0] === "/") {
@@ -363,16 +371,19 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
   return info;
 }
 
-function isImportExportStatement(line: string, index: number): boolean {
+function getStatementType(line: string): StatementType {
   line = line.trim();
   if (line.indexOf("import ") === 0) {
-    return true;
+    return "import";
   }
   if (line.indexOf("require(") !== -1) {
-    return true;
+    return "require";
   }
   if (line.indexOf("export ") === 0 && line.indexOf(" from ") !== -1) {
-    return true;
+    return "export";
+  }
+  if (line.trim().indexOf("/// <reference ") === 0) {
+    return "reference";
   }
   return false;
 }
