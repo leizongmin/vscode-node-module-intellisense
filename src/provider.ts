@@ -11,6 +11,8 @@ import {
   CompletionItem, CompletionItemKind, FileSystemWatcher, Uri, Command,
   TextEdit, Disposable, WorkspaceConfiguration,
 } from "vscode";
+import * as resolvePackage from "resolve";
+
 
 export default class IntellisenseProvider implements CompletionItemProvider {
 
@@ -109,37 +111,56 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // this.debug("provideCompletionItems: parseLine", position, info);
 
     let list: CompletionItem[] = [];
-    const isShowPackage = info.packagePath || info.search === "";
-    const isShowFile = info.absoultePath || info.relativePath || info.search === "";
+
+    const isShowPackageSubPath = info.isPackagePath && info.search.indexOf("/") > 0;
+    const isShowPackage = info.isPackagePath || info.search === "";
+    const isShowFile = info.isAbsoultePath || info.isRelativePath || info.search === "";
     const isIncludeExtname = info.type === "reference";
 
-    // builtin modules
-    if (isShowPackage && this.enableBuiltinModules) {
-      list = IntellisenseProvider.builtinModules.map(name => {
-        return createCompletionItem(name, CompletionItemKind.Module, { detail: "builtin module" });
-      });
-    }
+    if (isShowPackageSubPath) {
 
-    // packages npm dependencies
-    if (isShowPackage) {
-      list = list.concat(this.dependencies.map(name => {
-        return createCompletionItem(name, CompletionItemKind.Module, { detail: "npm dependencies" });
-      }));
+      // package sub path
+      let pkgDir;
+      try {
+        pkgDir = await resolvePackageDirectory(info.packageName, document.uri.fsPath);
+        const currentDir = path.resolve(pkgDir, info.packageSubPath);
+        const files = await this.readCurrentDirectory(currentDir, info.search, false);
+        // fix insertText
+        files.forEach(item => {
+          item.insertText = item.label.slice(info.search.length);
+        });
+        list = list.concat(files);
+      } catch (err) {
+        // this.debug("resolvePackageDirectory", err);
+      }
+
+    } else {
+
+      // builtin modules
+      if (isShowPackage && this.enableBuiltinModules) {
+        list = IntellisenseProvider.builtinModules.map(name => {
+          return createCompletionItem(name, CompletionItemKind.Module, { detail: "builtin module" });
+        });
+      }
+
+      // packages npm dependencies
+      if (isShowPackage) {
+        list = list.concat(this.dependencies.map(name => {
+          return createCompletionItem(name, CompletionItemKind.Module, { detail: "npm dependencies" });
+        }));
+      }
     }
 
     // packages from relative path
     if (isShowFile && this.enableFileModules) {
       const currentDir = path.resolve(path.dirname(document.uri.fsPath), info.search);
       const files = await this.readCurrentDirectory(currentDir, info.search || "./", isIncludeExtname);
+      // fix insertText
+      files.forEach(item => {
+        item.insertText = item.label.slice(info.search.length);
+      });
       list = list.concat(files);
     }
-
-    // fix insertText
-    list.forEach(item => {
-      if (!info.packagePath) {
-        item.insertText = item.label.slice(info.search.length);
-      }
-    });
 
     // this.debug("provideCompletionItems", list);
     return list;
@@ -338,9 +359,11 @@ interface IntellisenseLineInfo {
   quotation?: string;
   quotationStart?: number;
   search?: string;
-  absoultePath?: boolean;
-  relativePath?: boolean;
-  packagePath?: boolean;
+  isAbsoultePath?: boolean;
+  isRelativePath?: boolean;
+  isPackagePath?: boolean;
+  packageName?: string;
+  packageSubPath?: string;
   position?: Position;
   type?: StatementType;
 }
@@ -367,11 +390,19 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
   info.search = line.slice(i + 1, position.character);
 
   if (info.search[0] === ".") {
-    info.relativePath = true;
+    info.isRelativePath = true;
   } else if (info.search[0] === "/") {
-    info.absoultePath = true;
+    info.isAbsoultePath = true;
   } else {
-    info.packagePath = true;
+    info.isPackagePath = true;
+    const j = info.search.indexOf(path.sep);
+    if (j === -1) {
+      info.packageName = info.search;
+      info.packageSubPath = "";
+    } else {
+      info.packageName = info.search.slice(0, j);
+      info.packageSubPath = info.search.slice(j + 1);
+    }
   }
   return info;
 }
@@ -419,4 +450,25 @@ function parseFileExtensionName(filename: string, supportExtensions: string[]): 
     }
   }
   return [ false, "" ];
+}
+
+/**
+ * Returns require package directory from current path
+ */
+function resolvePackageDirectory(pkgName: string, filename: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    resolvePackage(pkgName, {
+      basedir: path.dirname(filename),
+    }, (err, fullPath) => {
+      if (err) {
+        return reject(err);
+      }
+      const modulesDir = `${ path.sep }node_modules${ path.sep }`;
+      const i = fullPath.lastIndexOf(modulesDir);
+      if (i === -1) {
+        return resolve(path.dirname(fullPath));
+      }
+      resolve(fullPath.slice(0, i + modulesDir.length + pkgName.length));
+    });
+  });
 }

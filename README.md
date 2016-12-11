@@ -62,6 +62,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
 ## Changelog
 
++ v1.2.0 - Add support for package sub path such as `ts-node/register` (issue #4)
 + v1.1.0 - Fix some problem:
   + Support `export ... from ...` statement (issue #1)
   + Add support for TypeScript `/// <reference...` comment (issue #2)
