@@ -47,8 +47,8 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
   // Scans file modules as well
   "node-module-intellisense.scanFileModules": true,
 
-  // File module extension names
-  "node-module-intellisense.fileModuleExtensionNames": [
+  // File module extensions
+  "node-module-intellisense.fileModuleExtensions": [
     ".js",
     ".jsx",
     ".ts",

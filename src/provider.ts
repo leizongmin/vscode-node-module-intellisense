@@ -20,7 +20,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
-  public static readonly defaultFileModuleExtensionNames: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ];
+  public static readonly defaultfileModuleExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ];
   public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
   public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
@@ -34,7 +34,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   private enableDevDependencies: boolean = true;
   private enableFileModules: boolean = true;
   private enableBuiltinModules: boolean = true;
-  private fileModuleExtensionNames: string[] = IntellisenseProvider.defaultFileModuleExtensionNames;
+  private fileModuleExtensions: string[] = IntellisenseProvider.defaultfileModuleExtensions;
 
   private readonly disposables: Disposable[] = [];
 
@@ -48,9 +48,9 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       this.enableBuiltinModules = this.config.get("scanBuiltinModules", true);
       this.enableDevDependencies = this.config.get("scanDevDependencies", true);
       this.enableFileModules = this.config.get("scanFileModules", true);
-      this.fileModuleExtensionNames = this.config.get("fileModuleExtensionNames", IntellisenseProvider.defaultFileModuleExtensionNames);
-      this.fileModuleExtensionNames.sort((a, b) => b.length - a.length);
-      // this.debug(this.fileModuleExtensionNames);
+      this.fileModuleExtensions = this.config.get("fileModuleExtensions", IntellisenseProvider.defaultfileModuleExtensions);
+      this.fileModuleExtensions.sort((a, b) => b.length - a.length);
+      // this.debug(this.fileModuleExtensions);
     };
     vscode.workspace.onDidChangeConfiguration(e => {
       loadConfig();
@@ -224,7 +224,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         }));
       } else if (stats.isFile()) {
         // file
-        const [ ok, ext ] = parseFileExtensionName(name, this.fileModuleExtensionNames);
+        const [ ok, ext ] = parseFileExtensionName(name, this.fileModuleExtensions);
         if (ok) {
           const n = isIncludeExtname ? name : name.slice(0, name.length - ext.length);
           if (!fileMap.has(n)) {

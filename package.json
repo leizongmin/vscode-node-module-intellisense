@@ -49,10 +49,10 @@
           "default": true,
           "description": "Scans file modules as well"
         },
-        "node-module-intellisense.fileModuleExtensionNames": {
+        "node-module-intellisense.fileModuleExtensions": {
           "type": "array",
           "default": [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ],
-          "description": "File module extension names"
+          "description": "File module extensions"
         }
       }
     }
