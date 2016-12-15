@@ -29,7 +29,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   private context: ExtensionContext;
 
   private dependencies: string[] = [];
-  private packageJsonFile: string = path.resolve(vscode.workspace.rootPath, "package.json");
+  private packageJsonFile: string = this.resolveWorkspacePath("package.json");
   private packageJsonWatcher: FileSystemWatcher;
 
   private config: WorkspaceConfiguration;
@@ -191,6 +191,13 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     vscode.window.showWarningMessage(`node-module-intellisense: ${ msg }`);
   }
 
+  private resolveWorkspacePath(...paths: string[]): string {
+    if (vscode.workspace.rootPath) {
+      return path.resolve(vscode.workspace.rootPath, ...paths);
+    }
+    return path.resolve(...paths);
+  }
+
   private async updateDependenciesFromPackageJson(): Promise<void> {
     // check if file exists
     const exists = await isFileExists(this.packageJsonFile);
@@ -229,9 +236,16 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     const list: CompletionItem[] = [];
     const fileMap = new Map<string, boolean>();
 
+    const relativePathInfo = (p) => {
+      if (vscode.workspace.rootPath) {
+        return `relative to workspace: ${ path.relative(vscode.workspace.rootPath, p) }`;
+      }
+      return `absolute path: ${ p }`;
+    };
+
     list.push(createCompletionItem("..", CompletionItemKind.File, {
       detail: "directory",
-      documentation: `relative to workspace: ${ path.relative(vscode.workspace.rootPath, path.dirname(dir)) }`,
+      documentation: relativePathInfo(path.dirname(dir)),
     }));
 
     for (const name of names) {
@@ -241,7 +255,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         // directory
         list.push(createCompletionItem(`${ prefix }${ name }`, CompletionItemKind.File, {
           detail: "directory",
-          documentation: `relative to workspace: ${ path.relative(vscode.workspace.rootPath, realPath) }`,
+          documentation: relativePathInfo(realPath),
         }));
       } else if (stats.isFile()) {
         // file
@@ -252,7 +266,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
             fileMap.set(n, true);
             list.push(createCompletionItem(`${ prefix }${ n }`, CompletionItemKind.File, {
               detail: "file module",
-              documentation: `relative to workspace: ${ path.relative(vscode.workspace.rootPath, realPath) }`,
+              documentation: relativePathInfo(realPath),
             }));
           }
         }
