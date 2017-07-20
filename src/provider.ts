@@ -5,14 +5,23 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import * as resolvePackage from "resolve";
 import * as vscode from "vscode";
 import {
-  ExtensionContext, CompletionItemProvider, TextDocument, Position, CancellationToken,
-  CompletionItem, CompletionItemKind, FileSystemWatcher, Uri, Command,
-  TextEdit, Disposable, WorkspaceConfiguration,
+  CancellationToken,
+  Command,
+  CompletionItem,
+  CompletionItemKind,
+  CompletionItemProvider,
+  Disposable,
+  ExtensionContext,
+  FileSystemWatcher,
+  Position,
+  TextDocument,
+  TextEdit,
+  Uri,
+  WorkspaceConfiguration,
 } from "vscode";
-import * as resolvePackage from "resolve";
-
 
 export default class IntellisenseProvider implements CompletionItemProvider {
 
@@ -35,6 +44,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   private config: WorkspaceConfiguration;
   private enableDevDependencies: boolean = true;
   private enableFileModules: boolean = true;
+  private modulePaths: string[] = [];
   private enableBuiltinModules: boolean = true;
   private fileModuleExtensions: string[] = IntellisenseProvider.defaultfileModuleExtensions;
 
@@ -50,11 +60,12 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       this.enableBuiltinModules = this.config.get("scanBuiltinModules", true);
       this.enableDevDependencies = this.config.get("scanDevDependencies", true);
       this.enableFileModules = this.config.get("scanFileModules", true);
+      this.modulePaths = this.config.get("modulePaths", []);
       this.fileModuleExtensions = this.config.get("fileModuleExtensions", IntellisenseProvider.defaultfileModuleExtensions);
       this.fileModuleExtensions.sort((a, b) => b.length - a.length);
       // this.debug(this.fileModuleExtensions);
     };
-    vscode.workspace.onDidChangeConfiguration(e => {
+    vscode.workspace.onDidChangeConfiguration((e) => {
       loadConfig();
       // this.debug("reload config", this.config);
     });
@@ -84,7 +95,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
   public dispose() {
     // this.debug("dispose");
-    this.disposables.forEach(item => {
+    this.disposables.forEach((item) => {
       try {
         item.dispose();
       } catch (err) {
@@ -126,7 +137,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         const currentDir = path.resolve(pkgDir, info.packageSubPath);
         const files = await this.readCurrentDirectory(currentDir, info.search, false);
         // fix insertText
-        files.forEach(item => {
+        files.forEach((item) => {
           item.insertText = item.label.slice(info.search.length);
         });
         list = list.concat(files);
@@ -138,14 +149,14 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
       // builtin modules
       if (isShowPackage && this.enableBuiltinModules) {
-        list = IntellisenseProvider.builtinModules.map(name => {
+        list = IntellisenseProvider.builtinModules.map((name) => {
           return createCompletionItem(name, CompletionItemKind.Module, { detail: "builtin module" });
         });
       }
 
       // packages npm dependencies
       if (isShowPackage) {
-        list = list.concat(this.dependencies.map(name => {
+        list = list.concat(this.dependencies.map((name) => {
           return createCompletionItem(name, CompletionItemKind.Module, { detail: "npm dependencies" });
         }));
       }
@@ -156,10 +167,23 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       const currentDir = path.resolve(path.dirname(document.uri.fsPath), info.search);
       const files = await this.readCurrentDirectory(currentDir, info.search || "./", isIncludeExtname);
       // fix insertText
-      files.forEach(item => {
+      files.forEach((item) => {
         item.insertText = item.label.slice(info.search.length);
       });
       list = list.concat(files);
+    }
+
+    // packages from relative path
+    if (this.modulePaths.length > 0) {
+      for (const modulePath of this.modulePaths) {
+        const currentDir = this.resolveWorkspacePath(modulePath.replace("${workspaceRoot}", ""), info.search || "");
+        const files = await this.readCurrentDirectory(currentDir, info.search || "", isIncludeExtname);
+        // fix insertText
+        files.forEach((item) => {
+          item.insertText = item.label.slice(info.search.length);
+        });
+        list = list.concat(files);
+      }
     }
 
     // this.debug("provideCompletionItems", list);
@@ -222,15 +246,14 @@ export default class IntellisenseProvider implements CompletionItemProvider {
     // get dependencies
     const list = new Set<string>();
     if (json.dependencies) {
-      Object.keys(json.dependencies).forEach(name => list.add(name));
+      Object.keys(json.dependencies).forEach((name) => list.add(name));
     }
     if (this.enableDevDependencies && json.devDependencies) {
-      Object.keys(json.devDependencies).forEach(name => list.add(name));
+      Object.keys(json.devDependencies).forEach((name) => list.add(name));
     }
     this.dependencies = Array.from(list.values());
     // this.debug("load dependencies from package.json:", this.dependencies);
   }
-
   private async readCurrentDirectory(dir: string, prefix: string, isIncludeExtname: boolean): Promise<CompletionItem[]> {
     const names = await readdir(dir);
     const list: CompletionItem[] = [];
@@ -260,6 +283,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       } else if (stats.isFile()) {
         // file
         const [ ok, ext ] = parseFileExtensionName(name, this.fileModuleExtensions);
+        this.debug("FILE", name, ok, ext);
         if (ok) {
           const n = isIncludeExtname ? name : name.slice(0, name.length - ext.length);
           if (!fileMap.has(n)) {
@@ -281,7 +305,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
  * returns builtin modules
  */
 function getBuiltinModules(): string[] {
-  return Object.keys((process as any).binding("natives")).filter(n => {
+  return Object.keys((process as any).binding("natives")).filter((n) => {
     if (n.indexOf("_") !== -1) {
       return false;
     }

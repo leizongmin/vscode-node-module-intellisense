@@ -61,6 +61,11 @@
             ".json"
           ],
           "description": "File module extensions"
+        },
+        "node-module-intellisense.modulePaths": {
+          "type": "array",
+          "default": [],
+          "description": "Module Paths to scan. Use ${workspaceRoot} for workspace lookup."
         }
       }
     }
