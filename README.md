@@ -68,6 +68,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
 
 ## Changelog
 
++ v1.4.0 - Support for scans alternative module paths (useful when using packages like (https://www.npmjs.com/package/app-module-path) to manage require paths folder)
 + v1.3.0 - Fix problem when open a single file (not in workspace)
 + v1.2.0 - Add support for package sub path such as `ts-node/register` (issue #4)
 + v1.1.0 - Fix some problem:
