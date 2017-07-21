@@ -6,7 +6,7 @@
   "publisher": "leizongmin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leizongmin/vscode-node-module-intellisense.git"
+    "url": "https://github.com/leizongmin/vscode-node-module-intellisense.git"
   },
   "license": "MIT",
   "bugs": {
