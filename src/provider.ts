@@ -266,7 +266,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       return `absolute path: ${ p }`;
     };
 
-    list.push(createCompletionItem("..", CompletionItemKind.File, {
+    list.push(createCompletionItem("..", CompletionItemKind.Module, {
       detail: "directory",
       documentation: relativePathInfo(path.dirname(dir)),
     }));
@@ -276,7 +276,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       const stats = await readFileStats(realPath);
       if (stats.isDirectory()) {
         // directory
-        list.push(createCompletionItem(`${ prefix }${ name }`, CompletionItemKind.File, {
+        list.push(createCompletionItem(`${ prefix }${ name }`, CompletionItemKind.Module, {
           detail: "directory",
           documentation: relativePathInfo(realPath),
         }));
