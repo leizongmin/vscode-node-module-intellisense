@@ -31,7 +31,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
-  public static readonly defaultfileModuleExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json" ];
+  public static readonly defaultAutoStripExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".json" ];
   public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
   public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
@@ -46,7 +46,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   private enableFileModules: boolean = true;
   private modulePaths: string[] = [];
   private enableBuiltinModules: boolean = true;
-  private fileModuleExtensions: string[] = IntellisenseProvider.defaultfileModuleExtensions;
+  private autoStripExtensions: string[] = IntellisenseProvider.defaultAutoStripExtensions;
 
   private readonly disposables: Disposable[] = [];
 
@@ -61,9 +61,9 @@ export default class IntellisenseProvider implements CompletionItemProvider {
       this.enableDevDependencies = this.config.get("scanDevDependencies", true);
       this.enableFileModules = this.config.get("scanFileModules", true);
       this.modulePaths = this.config.get("modulePaths", []);
-      this.fileModuleExtensions = this.config.get("fileModuleExtensions", IntellisenseProvider.defaultfileModuleExtensions);
-      this.fileModuleExtensions.sort((a, b) => b.length - a.length);
-      // this.debug(this.fileModuleExtensions);
+      this.autoStripExtensions = this.config.get("autoStripExtensions", IntellisenseProvider.defaultAutoStripExtensions);
+      this.autoStripExtensions.sort((a, b) => b.length - a.length);
+      // this.debug(this.autoStripExtensions);
     };
     vscode.workspace.onDidChangeConfiguration((e) => {
       loadConfig();
@@ -282,17 +282,18 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         }));
       } else if (stats.isFile()) {
         // file
-        const [ ok, ext ] = parseFileExtensionName(name, this.fileModuleExtensions);
-        this.debug("FILE", name, ok, ext);
-        if (ok) {
-          const n = isIncludeExtname ? name : name.slice(0, name.length - ext.length);
-          if (!fileMap.has(n)) {
-            fileMap.set(n, true);
-            list.push(createCompletionItem(`${ prefix }${ n }`, CompletionItemKind.File, {
-              detail: "file module",
-              documentation: relativePathInfo(realPath),
-            }));
-          }
+        const [ strip, ext ] = parseFileExtensionName(name, this.autoStripExtensions);
+        this.debug("FILE", name, strip, ext);
+        let n = name;
+        if (!isIncludeExtname && strip) {
+          n = name.slice(0, name.length - ext.length);
+        }
+        if (!fileMap.has(n)) {
+          fileMap.set(n, true);
+          list.push(createCompletionItem(`${ prefix }${ n }`, CompletionItemKind.File, {
+            detail: "file module",
+            documentation: relativePathInfo(realPath),
+          }));
         }
       }
     }
@@ -483,9 +484,9 @@ function getForwardQuotation(line: string, index: number): [ number, string ] {
 /**
  * Parse File extension name
  */
-function parseFileExtensionName(filename: string, supportExtensions: string[]): [ boolean, string ] {
+function parseFileExtensionName(filename: string, autoStripExtensions: string[]): [ boolean, string ] {
   const len = filename.length;
-  for (const ext of supportExtensions) {
+  for (const ext of autoStripExtensions) {
     if (filename.slice(len - ext.length) === ext) {
       return [ true, ext ];
     }

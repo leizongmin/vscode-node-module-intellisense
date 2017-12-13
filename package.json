@@ -49,7 +49,7 @@
           "default": true,
           "description": "Scans file modules as well"
         },
-        "node-module-intellisense.fileModuleExtensions": {
+        "node-module-intellisense.autoStripExtensions": {
           "type": "array",
           "default": [
             ".js",
@@ -57,10 +57,9 @@
             ".ts",
             ".d.ts",
             ".tsx",
-            ".vue",
             ".json"
           ],
-          "description": "File module extensions"
+          "description": "Auto strip module extensions"
         },
         "node-module-intellisense.modulePaths": {
           "type": "array",
