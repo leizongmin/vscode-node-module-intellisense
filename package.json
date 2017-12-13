@@ -84,7 +84,5 @@
     "typescript": "^2.6.2",
     "vscode": "^1.1.10"
   },
-  "dependencies": {
-    "resolve": "^1.5.0"
-  }
+  "dependencies": {}
 }

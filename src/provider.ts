@@ -5,7 +5,6 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as resolvePackage from "resolve";
 import * as vscode from "vscode";
 import {
   CancellationToken,
@@ -22,6 +21,7 @@ import {
   Uri,
   WorkspaceConfiguration,
 } from "vscode";
+import resolvePackage from "./resolve";
 
 export default class IntellisenseProvider implements CompletionItemProvider {
 
@@ -142,7 +142,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
         });
         list = list.concat(files);
       } catch (err) {
-        // this.debug("resolvePackageDirectory", err);
+        this.debug("resolvePackageDirectory", err);
       }
 
     } else {
@@ -433,7 +433,10 @@ function parseLine(document: TextDocument, position: Position): IntellisenseLine
     info.isAbsoultePath = true;
   } else {
     info.isPackagePath = true;
-    const j = info.search.indexOf(path.sep);
+    let j = info.search.indexOf(path.sep);
+    if (j !== -1 && info.search[0] === "@") {
+      j = info.search.indexOf(path.sep, j + 1);
+    }
     if (j === -1) {
       info.packageName = info.search;
       info.packageSubPath = "";
@@ -494,19 +497,5 @@ function parseFileExtensionName(filename: string, supportExtensions: string[]): 
  * Returns require package directory from current path
  */
 function resolvePackageDirectory(pkgName: string, filename: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    resolvePackage(pkgName, {
-      basedir: path.dirname(filename),
-    }, (err, fullPath) => {
-      if (err) {
-        return reject(err);
-      }
-      const modulesDir = `${ path.sep }node_modules${ path.sep }`;
-      const i = fullPath.lastIndexOf(modulesDir);
-      if (i === -1) {
-        return resolve(path.dirname(fullPath));
-      }
-      resolve(fullPath.slice(0, i + modulesDir.length + pkgName.length));
-    });
-  });
+  return resolvePackage(pkgName, path.dirname(filename));
 }
