@@ -56,8 +56,7 @@
             ".jsx",
             ".ts",
             ".d.ts",
-            ".tsx",
-            ".json"
+            ".tsx"
           ],
           "description": "Auto strip module extensions"
         },

@@ -31,7 +31,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
   public static readonly builtinModules: string[] = getBuiltinModules();
 
   public static readonly configPath: string = "node-module-intellisense";
-  public static readonly defaultAutoStripExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx", ".json" ];
+  public static readonly defaultAutoStripExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx" ];
   public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
   public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
