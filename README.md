@@ -13,23 +13,20 @@ This plugin was inspired by [Npm Intellisense](https://github.com/ChristianKohle
 
 ![auto complete](https://github.com/leizongmin/vscode-node-module-intellisense/raw/master/images/auto_complete.gif)
 
-
 ## Installation
 
 Launch VS Code Quick Open (⌘+P), paste the following command, and press enter.
 
-```
+```bash
 ext install node-module-intellisense
 ```
 
 View detail on [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=leizongmin.node-module-intellisense)
 
-
 ## Issues & Contribution
 
 If there is any bug, create a pull request or an issue please.
 [Github](https://github.com/leizongmin/vscode-node-module-intellisense)
-
 
 ## Configuration
 
@@ -53,42 +50,40 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
    **/
   "node-module-intellisense.modulePaths": [],
 
-  // File module extensions
-  "node-module-intellisense.fileModuleExtensions": [
+  // Auto strip module extensions
+  "node-module-intellisense.autoStripExtensions": [
     ".js",
     ".jsx",
     ".ts",
     ".d.ts",
-    ".tsx",
-    ".vue",
-    ".json"
+    ".tsx"
   ],
 }
 ```
 
 ## Changelog
 
-+ v1.5.0 - Updates:
-  + Fix issue [#10](https://github.com/leizongmin/vscode-node-module-intellisense/issues/10) Add ability to resolve `@scoped/packages` subdirectories
-  + Support all file extensions
-+ v1.4.0 - Support for scans alternative module paths (useful when using packages like (https://www.npmjs.com/package/app-module-path) to manage require paths folder)
-+ v1.3.0 - Fix problem when open a single file (not in workspace)
-+ v1.2.0 - Add support for package sub path such as `ts-node/register` (issue #4)
-+ v1.1.0 - Fix some problem:
-  + Support `export ... from ...` statement (issue #1)
-  + Add support for TypeScript `/// <reference...` comment (issue #2)
-  + Fix TypeScript `.d.ts` file problem (issue #3)
-+ v1.0.4 - Support language `HTML`
-+ v1.0.2 - Support custom file module extension name, add `.vue` and `.json` to default
-+ v1.0.1 - Fix `.vscodeignore`
-+ v1.0.0 - Initial release
+* v1.5.0 - Updates:
+  * Fix issue [#10](https://github.com/leizongmin/vscode-node-module-intellisense/issues/10) Add ability to resolve `@scoped/packages` subdirectories
+  * Support all file extensions
+* v1.4.0 - Support for scans alternative module paths (useful when using packages like (https://www.npmjs.com/package/app-module-path) to manage require paths folder)
+* v1.3.0 - Fix problem when open a single file (not in workspace)
+* v1.2.0 - Add support for package sub path such as `ts-node/register` (issue #4)
+* v1.1.0 - Fix some problem:
+  * Support `export ... from ...` statement (issue #1)
+  * Add support for TypeScript `/// <reference...` comment (issue #2)
+  * Fix TypeScript `.d.ts` file problem (issue #3)
+* v1.0.4 - Support language `HTML`
+* v1.0.2 - Support custom file module extension name, add `.vue` and `.json` to default
+* v1.0.1 - Fix `.vscodeignore`
+* v1.0.0 - Initial release
 
 ## License
 
 ```
 MIT License
 
-Copyright (c) 2016 Zongmin Lei <leizongmin@gmail.com>
+Copyright (c) 2016-2017 Zongmin Lei <leizongmin@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
