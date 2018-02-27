@@ -16,16 +16,14 @@
   "engines": {
     "vscode": "^1.5.0"
   },
-  "categories": [
-    "Other",
-    "Languages"
-  ],
+  "categories": ["Other", "Languages"],
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
     "onLanguage:typescript",
     "onLanguage:typescriptreact",
-    "onLanguage:html"
+    "onLanguage:html",
+    "onLanguage:coffeescript"
   ],
   "main": "./out/src/extension",
   "icon": "images/icon.png",
@@ -56,7 +54,9 @@
             ".jsx",
             ".ts",
             ".d.ts",
-            ".tsx"
+            ".tsx",
+            ".coffee",
+            ".cson"
           ],
           "description": "Auto strip module extensions"
         },

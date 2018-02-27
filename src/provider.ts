@@ -32,7 +32,7 @@ export default class IntellisenseProvider implements CompletionItemProvider {
 
   public static readonly configPath: string = "node-module-intellisense";
   public static readonly defaultAutoStripExtensions: string[] = [ ".js", ".jsx", ".ts", ".d.ts", ".tsx" ];
-  public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html" ];
+  public static readonly languageSelector: string[] = [ "javascript", "javascriptreact", "typescript", "typescriptreact", "html", "coffeescript" ];
   public static readonly triggerCharacters: string[] = [ "'", "\"", "/" ];
 
   private context: ExtensionContext;
