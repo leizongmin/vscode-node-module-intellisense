@@ -1,18 +1,20 @@
 {
   "name": "node-module-intellisense",
-  "displayName": "Node.js Modules Intellisense",
+  "displayName": "Node.js Modules Intellisense (with Coffee)",
   "description": "Autocompletes Node.js modules in import statements",
   "version": "1.5.0",
-  "publisher": "leizongmin",
+  "publisher": "jhessin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/leizongmin/vscode-node-module-intellisense.git"
+    "url": "https://github.com/jhessin/vscode-node-module-intellisense.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leizongmin/vscode-node-module-intellisense/issues"
+    "url":
+      "https://github.com/leizongmin/vscode-node-module-intellisense/issues"
   },
-  "homepage": "https://github.com/leizongmin/vscode-node-module-intellisense#readme",
+  "homepage":
+    "https://github.com/jhessin/vscode-node-module-intellisense.git#readme",
   "engines": {
     "vscode": "^1.5.0"
   },
@@ -49,21 +51,14 @@
         },
         "node-module-intellisense.autoStripExtensions": {
           "type": "array",
-          "default": [
-            ".js",
-            ".jsx",
-            ".ts",
-            ".d.ts",
-            ".tsx",
-            ".coffee",
-            ".cson"
-          ],
+          "default": [".js", ".jsx", ".ts", ".d.ts", ".tsx"],
           "description": "Auto strip module extensions"
         },
         "node-module-intellisense.modulePaths": {
           "type": "array",
           "default": [],
-          "description": "Module Paths to scan. Use ${workspaceRoot} for workspace lookup."
+          "description":
+            "Module Paths to scan. Use ${workspaceRoot} for workspace lookup."
         }
       }
     }
@@ -82,5 +77,10 @@
     "typescript": "^2.6.2",
     "vscode": "^1.1.10"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "__metadata": {
+    "id": "1bb92b2c-526c-4bfd-bb38-5bae1b278c89",
+    "publisherId": "leizongmin.node-module-intellisense",
+    "publisherDisplayName": "leizongmin"
+  }
 }
