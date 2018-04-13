@@ -7,6 +7,8 @@
 
 # Node.js Modules Intellisense
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/vscode-node-module-intellisense.svg)](https://greenkeeper.io/)
+
 Visual Studio Code plugin that autocompletes JavaScript / TypeScript modules in import statements.
 
 This plugin was inspired by [Npm Intellisense](https://github.com/ChristianKohler/NpmIntellisense) and [AutoFileName](https://github.com/s6323859/vscode-autofilename).
