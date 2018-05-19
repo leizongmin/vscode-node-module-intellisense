@@ -73,7 +73,7 @@
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.5.2",
     "@types/resolve": "0.0.4",
-    "mocha": "^4.0.1",
+    "mocha": "^5.2.0",
     "typescript": "^2.6.2",
     "vscode": "^1.1.10"
   },
