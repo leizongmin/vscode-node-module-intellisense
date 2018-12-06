@@ -75,7 +75,7 @@
     "@types/resolve": "0.0.4",
     "mocha": "^4.0.1",
     "typescript": "^2.6.2",
-    "vscode": "^1.1.10"
+    "vscode": "^1.1.26"
   },
   "dependencies": {},
   "__metadata": {
