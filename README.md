@@ -47,7 +47,7 @@ Set scanBuiltinModules, scanDevDependencies and scanFileModules to false to disa
   "node-module-intellisense.scanFileModules": true,
 
   /**
-   * Scans alternative module paths (eg. Search on ${workspcaceRoot}/lib).
+   * Scans alternative module paths (eg. Search on ${workspaceFolder}/lib).
    * Useful when using packages like (https://www.npmjs.com/package/app-module-path) to manage require paths folder.
    **/
   "node-module-intellisense.modulePaths": [],
