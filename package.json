@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^2.2.44",
-    "@types/node": "^8.5.2",
+    "@types/node": "^11.12.1",
     "@types/resolve": "0.0.4",
     "mocha": "^4.0.1",
     "typescript": "^2.6.2",
