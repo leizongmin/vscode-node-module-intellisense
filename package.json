@@ -72,7 +72,7 @@
   "devDependencies": {
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.5.2",
-    "@types/resolve": "0.0.4",
+    "@types/resolve": "1.17.0",
     "mocha": "^4.0.1",
     "typescript": "^2.6.2",
     "vscode": "^1.1.10"
